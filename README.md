@@ -18,4 +18,4 @@ Space is really, really cool.
 
 ![Crab Nebula](https://apod.nasa.gov/apod/image/1803/crab_lg.jpg)
 
-[Astronomy Picture of the Day for 17 March 2018]([https://apod.nasa.gov/apod/ap180317.html]). Image Credit: NASA, CXC, STSCI, JPL-Caltech. 
+[Astronomy Picture of the Day for 17 March 2018](https://apod.nasa.gov/apod/ap180317.html). Image Credit: NASA, CXC, STSCI, JPL-Caltech. 
