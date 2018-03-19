@@ -9,28 +9,39 @@ If today parameter is specified, fetch today's image.
 otherwise, fetch a random image.
 */
 
-// set debug=true to see the messages from NASA.
+// set debug=true to see the messages from NASA, false to ignore.
 var debug = true;
 
 var baseURL = 'https://api.nasa.gov/planetary/apod';
 
-function apodRequest(callback, random) {
+/**
+ Makes a call to the NASA APOD service.
+ @param {requstCallback} callback function
+ @param type of picture to fetch. If type='random' return a random picture. Otherwise return today's picture.
+
+@callback requestCallback
+@param {Error} error message from APOD call or response processing or null if no error
+@param {JSON} result prcessed JSON data for use in app.
+
+*/
+
+function apodRequest(callback, type) {
 
   process.nextTick(function(){
 
-    debugMessage('APOD request starting for ' + random ? 'random picture' : 'today\'s picture');
+    debugMessage('APOD request starting for ' + type === 'random' ? 'random picture' : 'today\'s picture');
 
-    // Uncomment the line above to force the error page to display. Alternativly, disconnect from the internet, use an invalid API key...
-    //callback({message: 'Not really an error'});
+    // Uncomment this line to force the error page to display. Alternativly, disconnect from the internet, use an invalid API key...
+    // return callback({message: 'Not really an error'});
 
     var queryParam = {};
     var APIKEY = process.env.APOD_API_KEY;  // Make sure an environment variable is set, containing a valid APOD key
 
-    if (random) {
-      queryParam = { 'api_key' : APIKEY,  'date' :randomDateString()  };
+    if (type && type.toLowerCase() === 'random') {
+      queryParam = { api_key : APIKEY,  date: randomDateString()  };
     }
     else {
-      queryParam = { 'api_key' : APIKEY};
+      queryParam = { api_key : APIKEY};
     }
 
     //Use request module to request picture from APOD service.
@@ -44,14 +55,15 @@ function apodRequest(callback, random) {
 
         try {
           var apodJSON = JSON.parse(body);   //Convert JSON text to a JavaScript object
-          var jsonForTemplate = processAPODresponse(random, apodJSON);  // Rearrange JSON into a more useful format for display in the template
+          var jsonForTemplate = processAPODresponse(type === 'random', apodJSON);  // Rearrange JSON into a more useful format for display in the template
+          // Call the callback, to send the data back to the function that invoked this one
+          callback(null, jsonForTemplate);  // first argument = null to indicate there was no error.
         } catch (error) {
           // Errors processing APOD JSON into the format needed in the app
           debugMessage('Error converting APOD response into format needed in app, reason: ' + error)
           callback(error);
+
         }
-        // Call the callback, to send the data back to the function that invoked this one
-        callback(null, jsonForTemplate);  // first argument = null to indicate there was no error.
       }
 
       else {
