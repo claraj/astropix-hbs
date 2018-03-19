@@ -25,7 +25,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-
+// Configure persistent session storage
 var favorites_db_url = process.env.MONGO_URL;
 
 var store = new MongoDBStore( { uri: favorites_db_url, collection: 'sessions'}, function(err){
