@@ -18,9 +18,10 @@ router.get('/fetchpicture', function(req, res, next){
   apodService(function(err, apod_data){
 
     if (err) {
+      console.log(err);
       res.render('apod_error', { message: err.message, title: 'Error' });
     } else {
-      res.render('index', {apod: apod_data, title: `APOD for ${apod_data.date}`});
+      res.render('index', { apod: apod_data, title: `APOD for ${apod_data.date}` });
     }
 
   }, req.query.picturetype);
